@@ -16,6 +16,13 @@ Vincent Cameron
 - Everyone loads the same saved vectorizer — do not re-fit individually
 - This ensures all model results are comparable
 
+CALL these transform functions instead of .fit
+import joblib
+vectorizer = joblib.load('data/tfidf_vectorizer.joblib')
+X_train_tfidf = vectorizer.transform(train_df['text'])
+X_val_tfidf   = vectorizer.transform(val_df['text'])
+X_test_tfidf  = vectorizer.transform(test_df['text'])
+
 ---
 
 ## Traditional Models — Low Effort
