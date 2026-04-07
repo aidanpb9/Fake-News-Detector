@@ -1,3 +1,5 @@
+#TODO: update with validation set
+#also fit and save the TF-IDF vectorizer as a file using joblib and others load it
 import pandas as pd
 import numpy as np
 import re
