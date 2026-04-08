@@ -36,3 +36,4 @@ see logreg.py for example for Random Forest
 - Results + conclusion section: Interpret results, answer design questions, future work
 
 fix README: Instructions to run each script, requirements.txt, folder structure
+
