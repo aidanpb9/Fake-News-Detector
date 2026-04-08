@@ -6,14 +6,16 @@ Vincent Cameron
 Future work: feature importance
 
 
-# Project Task Breakdown
-CALL these transform functions instead of .fit
+Notes:
+CALL these transform functions instead of .fit (see logreg.py for example):
 import joblib
 vectorizer = joblib.load('data/tfidf_vectorizer.joblib')
 X_train_tfidf = vectorizer.transform(train_df['text'])
 X_val_tfidf   = vectorizer.transform(val_df['text'])
 X_test_tfidf  = vectorizer.transform(test_df['text'])
 
+
+# Tasks
 
 **Aidan** — Logistic Regression + SVM
 - Load saved TF-IDF vectorizer → fit LR and SVM → save predictions

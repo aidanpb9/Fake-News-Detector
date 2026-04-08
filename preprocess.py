@@ -58,8 +58,8 @@ df['cleaned'] = df['content'].apply(clean_text)
 df['processed'] = df['cleaned'].apply(tokenize_and_lemmatize)
 
 #Train 70, Val 10, Test 20
-X = df['processed']
-y = df['label']
+X = df['processed'].replace('', pd.NA).dropna() #drop nans
+y = df.loc[X.index, 'label'] #align y indices with whatever gets dropped
 
 X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.667, random_state=42, stratify=y_temp)
