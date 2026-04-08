@@ -3,6 +3,9 @@ Ethan Sax
 Vincent Cameron
 
 
+Future work: feature importance
+
+
 # Project Task Breakdown
 
 ## Data Split — decided
@@ -30,7 +33,7 @@ X_test_tfidf  = vectorizer.transform(test_df['text'])
 **Aidan** — Logistic Regression + SVM
 - Load saved TF-IDF vectorizer → fit LR and SVM → save predictions
 
-**Person 3** — Random Forest
+**Ethan** — Random Forest
 - Load saved TF-IDF vectorizer → fit RF → save predictions
 
 ---
@@ -58,7 +61,7 @@ X_test_tfidf  = vectorizer.transform(test_df['text'])
 **Aidan** — Tune LR + SVM
 - GridSearchCV on C, kernel, max_iter
 
-**Person 3** — Tune Random Forest
+**Ethan** — Tune Random Forest
 - GridSearchCV on n_estimators, max_depth
 
 ---
@@ -68,7 +71,7 @@ X_test_tfidf  = vectorizer.transform(test_df['text'])
 **Aidan** — Introduction + dataset section
 - Background, motivation, dataset description
 
-**Person 3** — Methods section
+**Ethan** — Methods section
 - Describe preprocessing + all 4 models
 
 **Vincent** — Results + conclusion section
