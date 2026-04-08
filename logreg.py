@@ -3,10 +3,12 @@ Load preprocessed data and TF-IDF vectorizer.
 Train LR with GridSearchCV hyperparameter tuning and save predictions."""
 
 import pandas as pd
+import numpy as np
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, accuracy_score
+
 
 #Load Data
 train_df = pd.read_csv('data/train.csv')
@@ -31,13 +33,66 @@ X_test_vec = vectorizer.transform(X_test)
 print(f"Vectorized shape (train): {X_train_vec.shape}")
 
 
-# ── Hyperparameter Tuning ─────────────────────────────────────────────────────
+#Hyperparameter Tuning
+#c=regularization strength, low=simple model=less overfitting, big=fit training data closely
+#max_iter=how many updates allowed to make, if too low we stop before converging
+param_grid = {
+    'C': [0.01, 0.1, 1, 10],
+    'max_iter': [100, 200, 500]
+}
+
+#lbfgs is optimization algo used for finding min of function
+#grid search tries 4x3 combos of the grid above to find best one.
+#cv=5 splits train into 4 train and 1 test, so we're only using 80% of training data
+grid_search = GridSearchCV(
+    LogisticRegression(solver='lbfgs'),
+    param_grid,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1,
+    verbose=1
+)
+
+print("Running GridSearchCV (takes a few minutes)")
+grid_search.fit(X_train_vec, y_train)
+print(f"Best params: {grid_search.best_params_}")
+print(f"Best CV accuracy: {grid_search.best_score_:.4f}")
 
 
-# ── Train Best Model ──────────────────────────────────────────────────────────
+#Train Best Model
+best_params = grid_search.best_params_
+model = LogisticRegression(solver='lbfgs', **best_params)
+model.fit(X_train_vec, y_train)
+print("Model trained.")
+
+#Evaluate
+val_preds = model.predict(X_val_vec)
+test_preds = model.predict(X_test_vec)
+
+print(f"\nValidation Accuracy: {accuracy_score(y_val, val_preds):.4f}")
+print(f"Validation Report:\n{classification_report(y_val, val_preds)}")
+
+print(f"Test Accuracy: {accuracy_score(y_test, test_preds):.4f}")
+print(f"Test Report:\n{classification_report(y_test, test_preds)}")
 
 
-# ── Evaluate ──────────────────────────────────────────────────────────────────
+#Feature Importance
+feature_names = vectorizer.get_feature_names_out()
+weights = model.coef_[0]
+
+#get top 20 words for real and fake
+top_fake = np.argsort(weights)[-20:][::-1] 
+top_real = np.argsort(weights)[:20]
+
+print("\nTop 20 fake words:")
+for i in top_fake:
+    print(f"{feature_names[i]}: {weights[i]:.4f}")
+
+print("\nTop 20 real words:")
+for i in top_real:
+    print(f"{feature_names[i]}: {weights[i]:.4f}")
 
 
-# ── Save Predictions ──────────────────────────────────────────────────────────
+#Save Predictions
+pd.DataFrame({'label': y_test, 'prediction': test_preds}).to_csv('data/logreg_predictions.csv', index=False)
+print("Predictions saved to data/logreg_predictions.csv")
