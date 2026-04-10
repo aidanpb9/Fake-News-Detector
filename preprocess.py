@@ -33,13 +33,16 @@ df = df.sample(frac=1, random_state=42).reset_index(drop=True) #shuffle
 #combine title and text into one piece of data
 df['content'] = df['title'].fillna('') + ' ' + df['text'].fillna('')
 
+#NOTE: This removes all numbers. Do we want to keep numbers for dates or statistics that are mentioned?
+#I added the line of code that would preserve digits if we want too
 def clean_text(text):
     """Remove URLs, brackets, non alpha-numerics, and spaces"""
     text = text.lower()
     text = re.sub(r'https?://\S+|www\.\S+', '', text)  
     text = re.sub(r'\[.*?\]', '', text)                  
     text = re.sub(r'[^a-z\s]', '', text)                 
-    text = re.sub(r'\s+', ' ', text).strip()             
+    text = re.sub(r'\s+', ' ', text).strip()
+    #text = re.sub(r'[^a-z0-9\s]', '', text)
     return text
 
 #Tokenization, stop-word removal, and lemmatization
