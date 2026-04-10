@@ -14,6 +14,7 @@ see logreg.py for example for Random Forest
 - change output dirs
 - save models themselves to models
 - docstrings for rubrics sake
+- start final report
 
 **Ethan** — Random Forest
 - Load saved TF-IDF vectorizer → fit RF → save predictions
@@ -25,19 +26,19 @@ see logreg.py for example for Random Forest
 - Uses its own tokenizer, not TF-IDF
 
 ## Evaluation — Low Effort
-**Vincent** — Confusion matrices + ROC curves
-- One script that loads all predictions and plots side-by-side
-
-**Joint** — Results comparison table
-- Accuracy, Precision, Recall, F1 for all 4 models in one table
+**Vincent** 
+- Confusion matrices for each model
+- ROC curves for all 4 models in one table
+- Not precision,recall, F1 not meaningful
 
 
 ## Final Report (revisit these sections later)
-- Introduction
+- Aidan: Introduction
 - dataset section and description
 - Background, motivation,
-- Methods section: describe preprocessing + all 4 models
-- Results + conclusion section: Interpret results, answer design questions, future work
+- describe preprocessing 
+- Ethan: all 4 models
+- Vincent: Results + conclusion section: Interpret results, answer design questions, future work
 
 fix README: Instructions to run each script, requirements.txt, folder structure
 
