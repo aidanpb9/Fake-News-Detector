@@ -11,10 +11,14 @@ see logreg.py for example for Random Forest
 **Aidan** — Logistic Regression + SVM
 - Load saved TF-IDF vectorizer → fit LR and SVM → save predictions
 - hyperparam Tune LR + SVM: GridSearchCV on C, kernel, max_iter
+- change output dirs
+- save models themselves to models
+- docstrings for rubrics sake
 
 **Ethan** — Random Forest
 - Load saved TF-IDF vectorizer → fit RF → save predictions
 - hyperparam Tune Random Forest: GridSearchCV on n_estimators, max_depth
+- docstrings for rubrics sake
 
 **Vincent** — Fine-tune bert-base-uncased (pre-trained, decided)
 - HuggingFace tokenizer → training loop → save model + predictions
