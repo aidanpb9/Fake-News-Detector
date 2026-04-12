@@ -7,7 +7,13 @@ import numpy as np
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+import os
+
+
+#Make dirs if needed
+os.makedirs("results", exist_ok=True)
 
 
 #Load Data
@@ -64,6 +70,7 @@ best_params = grid_search.best_params_
 model = LogisticRegression(solver='lbfgs', **best_params)
 model.fit(X_train_vec, y_train)
 print("Model trained.")
+joblib.dump(model, "models/logreg_model.joblib")
 
 #Evaluate
 val_preds = model.predict(X_val_vec)
@@ -94,5 +101,12 @@ for i in top_real:
 
 
 #Save Predictions
-pd.DataFrame({'label': y_test, 'prediction': test_preds}).to_csv('data/logreg_predictions.csv', index=False)
-print("Predictions saved to data/logreg_predictions.csv")
+pd.DataFrame({'label': y_test, 'prediction': test_preds}).to_csv('results/logreg_predictions.csv', index=False)
+print("Predictions saved to results/logreg_predictions.csv")
+
+
+#Confusion Matrix
+ConfusionMatrixDisplay.from_predictions(y_test, test_preds)
+plt.title("Logistic Regression")
+plt.savefig("results/logreg_confusion_matrix.png") 
+plt.show()
