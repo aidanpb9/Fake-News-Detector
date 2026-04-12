@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage[final]{neurips_2026}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+\title{Fake News Detection: Comparing Classical ML Models Against BERT}
+
+\author{%
+  Aidan Brinkley \\
+  Department of Computer Science\\
+  Auburn University\\
+  Auburn, AL 36832 \\
+  \texttt{apb0074@auburn.edu} \\
+  \And
+  Ethan Sax \\
+  Department of Computer Science\\
+  Auburn University\\
+  Auburn, AL 36832 \\
+  \texttt{ems0157@auburn.edu} \\
+  \And
+  Vincent Cameron \\
+  Department of Computer Science\\
+  Auburn University\\
+  Auburn, AL 36832 \\
+  \texttt{vjc0009@auburn.edu} \\
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+% TODO: Write abstract once results are complete
+\end{abstract}
+
+\section{Introduction}
+
+The rapid spread of misinformation across online platforms has made automated fake news detection an increasingly important problem in natural language processing. Human fact checking cannot scale to the volume of content published daily, making machine learning approaches essential for flagging potentially false information.
+
+This project evaluates and compares four machine learning models for binary fake news classification: Logistic Regression, Support Vector Machine (SVM), Random Forest, and BERT. The first three are classical models that rely on TF-IDF feature extraction, while BERT is a pre-trained transformer model that uses contextual embeddings. Our goal is to determine whether the added complexity and computational cost of BERT provides a meaningful improvement in classification accuracy over classical approaches on the ISOT Fake News Dataset.
+
+\section{Background and Motivation}
+
+Early work in fake news detection relied on n-gram analysis and classical machine learning. Ahmed et al. [1, 2] demonstrated that TF-IDF combined with classifiers such as Logistic Regression and SVM could achieve strong performance on news article classification tasks. These approaches treat text as a bag of words, capturing word frequency patterns but ignoring word order and context.
+
+The introduction of BERT [3] marked a significant shift in NLP. By pre-training a deep bidirectional transformer on large corpora, BERT learns rich contextual representations where the meaning of a word is informed by its surrounding context. This allows BERT to capture semantic nuances that bag-of-words models cannot, such as negation or sarcasm.
+
+Our motivation is to directly compare these two paradigms on the same dataset and preprocessing pipeline, providing a clear picture of whether contextual embeddings offer a practical advantage for this classification task, or whether simpler models are sufficient.
+
+\section{Dataset}
+
+We use the ISOT Fake News Dataset, a common benchmark for fake news classification. The dataset contains approximately 45,000 news articles split into two classes: real (label 0) and fake (label 1).
+
+\begin{itemize}
+    \item \textbf{Real articles:} Sourced from Reuters.com, covering politics and world news.
+    \item \textbf{Fake articles:} Collected from various sources flagged as unreliable by Politifact and Wikipedia.
+    \item \textbf{Features:} Each article includes a title, full text, subject category, and publication date.
+    \item \textbf{Class balance:} The dataset is approximately balanced, with 21,417 real articles and 23,481 fake articles.
+\end{itemize}
+
+Only the article title and body text are used as input features. The subject and date fields are excluded to ensure the model learns from linguistic content rather than metadata.
+
+\section{Preprocessing}
+
+A unified preprocessing pipeline is applied to all classical models (Logistic Regression, SVM, Random Forest). BERT uses its own tokenizer and does not require this pipeline.
+
+\textbf{Text combination:} The article title and body text are concatenated into a single content field. Missing values in either field are replaced with empty strings before concatenation.
+
+\textbf{Cleaning:} The following transformations are applied: lowercasing, URL removal, bracket removal, and stripping of all non-alphabetic characters. Extra whitespace is removed.
+
+\textbf{Tokenization, stop-word removal, and lemmatization:} The cleaned text is tokenized using NLTK's \texttt{word\_tokenize}. Standard English stop words are removed, and each remaining token is lemmatized to its base form using WordNet's lemmatizer, such as ``running'' -> ``run''.
+
+\textbf{TF-IDF vectorization:} The processed text is converted to numerical feature vectors using TF-IDF with a vocabulary of 50,000 terms and unigram/bigram features (\texttt{ngram\_range=(1,2)}). The vectorizer is fit exclusively on the training set to prevent data leakage, then applied to validation and test sets via \texttt{transform}.
+
+\textbf{Data splitting:} The dataset is split into 70\% training (31,428 samples), 10\% validation (4,485 samples), and 20\% test (8,985 samples) using stratified splits to preserve class balance across all three sets.
+
+\section{Methods}
+% TODO: Ethan — describe all 4 models
+
+\subsection{Logistic Regression}
+
+\subsection{Support Vector Machine}
+
+\subsection{Random Forest}
+
+\subsection{BERT}
+
+\section{Results}
+% TODO: Vincent
+
+\section{Conclusion}
+% TODO: Vincent
+
+\section*{References}
+
+{\small
+
+[1] Ahmed H, Traore I, Saad S. (2017) Detection of Online Fake News Using N-Gram Analysis and Machine Learning Techniques.
+
+[2] Ahmed, H., Traore, I., Saad, S. (2018). Detecting Opinion Spams and Fake News Using Text Classification. {\it Security and Privacy}, 1(1).
+
+[3] Devlin, J., Chang, M. W., Lee, K., Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. {\it Proceedings of NAACL-HLT 2019}, pp. 4171--4186.
+
+}
+
+\end{document}

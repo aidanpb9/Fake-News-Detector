@@ -14,14 +14,9 @@ Vincent Cameron
 - Not precision,recall, F1 not meaningful
 
 ## Final Report (revisit these sections later)
-- Aidan: Introduction
-- dataset section and description
-- Background, motivation,
-- describe preprocessing 
 - Ethan: all 4 models
 - Vincent: Results + conclusion section: Interpret results, answer design questions, future work
 
-fix README: Instructions to run each script, requirements.txt, folder structure
 
 # Fake News Detector
 
