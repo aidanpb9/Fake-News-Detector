@@ -36,7 +36,9 @@ df['content'] = df['title'].fillna('') + ' ' + df['text'].fillna('')
 #NOTE: This removes all numbers. Do we want to keep numbers for dates or statistics that are mentioned?
 #I added the line of code that would preserve digits if we want too
 def clean_text(text):
-    """Remove URLs, brackets, non alpha-numerics, and spaces"""
+    """Normalize raw article text for TF-IDF.
+    Input:  raw string (title + body concatenated)
+    Output: lowercased string with URLs, brackets, punctuation, and extra whitespace removed"""
     text = text.lower()
     text = re.sub(r'https?://\S+|www\.\S+', '', text)  
     text = re.sub(r'\[.*?\]', '', text)                  
@@ -50,6 +52,9 @@ lemmatizer = WordNetLemmatizer() #reduces words to base forms, like "running" to
 stop_words = set(stopwords.words('english')) #make set of meaningless words like "the"
 
 def tokenize_and_lemmatize(text):
+    """Tokenize, remove stop words, and lemmatize cleaned text.
+    Input:  cleaned string from clean_text()
+    Output: single string of lemmatized tokens joined by spaces, ready for TF-IDF"""
     #split words into tokens, like "hello world" to ["hello", "world"]
     tokens = word_tokenize(text) 
     #loop through tokens and lemmatize them while skipping stop_words

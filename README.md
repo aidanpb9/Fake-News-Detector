@@ -1,10 +1,3 @@
-# Tasks
-
-## Final Report
-- Ethan: all 4 models
-- Vincent: Results + conclusion section: Interpret results, answer design questions, future work
-
-
 # Fake News Detector
 
 Aidan Brinkley, Ethan Sax, Vincent Cameron
@@ -55,11 +48,17 @@ python3 randomforest.py
 ```
 Same structure using RandomForestClassifier.
 
-**5. BERT** *(TBD)*
+**5. BERT**
 ```
 python3 bert.py
 ```
 Fine-tunes bert-base-uncased using HuggingFace. Uses its own tokenizer, not TF-IDF.
+
+**6. Compare Models**
+```
+python3 compare_models.py
+```
+Loads all saved predictions and model files, generates ROC curves, confusion matrices, metrics bar chart, and summary CSV.
 
 ## Requirements
 
