@@ -1,16 +1,6 @@
-Aidan Brinkley
-Ethan Sax 
-Vincent Cameron
-
 # Tasks
 
-## Evaluation — Low Effort
-**Vincent** 
-- Confusion matrices for each model
-- ROC curves for all 4 models in one table
-- Not precision,recall, F1 not meaningful
-
-## Final Report (revisit these sections later)
+## Final Report
 - Ethan: all 4 models
 - Vincent: Results + conclusion section: Interpret results, answer design questions, future work
 
