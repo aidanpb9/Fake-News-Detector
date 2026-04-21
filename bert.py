@@ -180,3 +180,22 @@ plt.title("BERT")
 plt.savefig("results/bert_confusion_matrix.png")
 plt.show()
 print("Confusion matrix saved → results/bert_confusion_matrix.png")
+
+# ── Save softmax probabilities for ROC curve in compare_models.py ──────────────
+print("\nGenerating softmax probabilities for ROC curve …")
+model.eval()
+all_probs = []
+with torch.no_grad():
+    for batch in tqdm(test_loader, desc="  Probability inference"):
+        input_ids      = batch["input_ids"].to(DEVICE)
+        attention_mask = batch["attention_mask"].to(DEVICE)
+        logits         = model(input_ids=input_ids, attention_mask=attention_mask).logits
+        all_probs.append(torch.softmax(logits, dim=1).cpu().numpy())
+
+probs = np.vstack(all_probs)
+pd.DataFrame({
+    "true_label": labels,
+    "prob_real":  probs[:, 0],
+    "prob_fake":  probs[:, 1],
+}).to_csv("results/bert_probabilities.csv", index=False)
+print("Probabilities saved → results/bert_probabilities.csv")

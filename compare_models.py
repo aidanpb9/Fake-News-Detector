@@ -89,13 +89,20 @@ for name, path in CLASSICAL_PATHS.items():
     print(f"    acc={acc:.4f}  f1={f1:.4f}")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 3. BERT — load from saved predictions
+# 3. BERT — load softmax probabilities from bert_probabilities.csv
+#    (generated at the end of bert.py — must exist before running this script)
 # ═══════════════════════════════════════════════════════════════════════════════
-print("\nLoading BERT predictions …")
-bert_cache   = pd.read_csv(f"{RESULTS_DIR}/bert_predictions.csv")
-bert_y_true  = bert_cache["true_label"].values
-y_pred_bert  = bert_cache["predicted"].values
-y_score_bert = y_pred_bert.astype(float)  # no probabilities, use hard predictions
+BERT_PROB_PATH = f"{RESULTS_DIR}/bert_probabilities.csv"
+assert os.path.exists(BERT_PROB_PATH), (
+    f"\n[ERROR] {BERT_PROB_PATH} not found.\n"
+    "Run bert.py first — it saves softmax probabilities needed for the ROC curve."
+)
+
+print("\nLoading BERT probabilities …")
+bert_probs   = pd.read_csv(BERT_PROB_PATH)
+bert_y_true  = bert_probs["true_label"].values
+y_score_bert = bert_probs["prob_fake"].values      # continuous score for ROC curve
+y_pred_bert  = (y_score_bert >= 0.5).astype(int)   # derive hard predictions from probs
 
 acc_b        = accuracy_score(bert_y_true, y_pred_bert)
 p_b, r_b, f1_b, _ = precision_recall_fscore_support(
