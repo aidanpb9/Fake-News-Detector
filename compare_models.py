@@ -19,7 +19,6 @@ import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import torch
 from sklearn.metrics import (
     accuracy_score,
     auc,
@@ -27,9 +26,6 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     roc_curve,
 )
-from torch.utils.data import DataLoader, Dataset
-from transformers import BertForSequenceClassification, BertTokenizer
-from tqdm.auto import tqdm
 
 warnings.filterwarnings("ignore")
 
@@ -38,8 +34,6 @@ RESULTS_DIR = "results"
 MODELS_DIR  = "models"
 DATA_DIR    = "data"
 os.makedirs(RESULTS_DIR, exist_ok=True)
-
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ── Consistent colours across every plot ───────────────────────────────────────
 MODEL_COLORS = {
@@ -55,7 +49,7 @@ MODEL_COLORS = {
 print("Loading test data …")
 test_df = pd.read_csv(f"{DATA_DIR}/test.csv").dropna(subset=["text", "label"])
 y_true  = test_df["label"].values
-print(f"  {len(test_df):,} samples  |  device: {DEVICE}")
+print(f"  {len(test_df):,} samples")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 2. Classical models — Logistic Regression, SVM, Random Forest
@@ -95,74 +89,13 @@ for name, path in CLASSICAL_PATHS.items():
     print(f"    acc={acc:.4f}  f1={f1:.4f}")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 3. BERT — load or run inference and cache probabilities
+# 3. BERT — load from saved predictions
 # ═══════════════════════════════════════════════════════════════════════════════
-BERT_PROB_CACHE = f"{RESULTS_DIR}/bert_probabilities.csv"
-
-class BertInferenceDataset(Dataset):
-    """Minimal dataset for inference-only BERT evaluation."""
-    def __init__(self, texts, tokenizer, max_len=256):
-        self.texts     = texts.tolist()
-        self.tokenizer = tokenizer
-        self.max_len   = max_len
-
-    def __len__(self):
-        return len(self.texts)
-
-    def __getitem__(self, idx):
-        enc = self.tokenizer(
-            str(self.texts[idx]),
-            max_length=self.max_len,
-            padding="max_length",
-            truncation=True,
-            return_tensors="pt",
-        )
-        return {
-            "input_ids":      enc["input_ids"].squeeze(0),
-            "attention_mask": enc["attention_mask"].squeeze(0),
-        }
-
-
-if os.path.exists(BERT_PROB_CACHE):
-    print(f"\nLoading cached BERT probabilities from {BERT_PROB_CACHE} …")
-    bert_cache   = pd.read_csv(BERT_PROB_CACHE)
-    bert_y_true  = bert_cache["true_label"].values
-    y_score_bert = bert_cache["prob_fake"].values
-    y_pred_bert  = (y_score_bert >= 0.5).astype(int)
-
-else:
-    print(f"\nRunning BERT inference on {DEVICE} …")
-    if DEVICE.type == "cpu":
-        print("  (CPU-only — this will take several minutes; result will be cached)")
-
-    bert_tokenizer = BertTokenizer.from_pretrained(f"{MODELS_DIR}/bert-fake-news")
-    bert_model     = BertForSequenceClassification.from_pretrained(
-        f"{MODELS_DIR}/bert-fake-news"
-    ).to(DEVICE).eval()
-
-    dataset    = BertInferenceDataset(test_df["text"], bert_tokenizer)
-    loader     = DataLoader(dataset, batch_size=32, num_workers=0)
-    probs_list = []
-
-    with torch.no_grad():
-        for batch in tqdm(loader, desc="  BERT inference"):
-            logits = bert_model(
-                input_ids      = batch["input_ids"].to(DEVICE),
-                attention_mask = batch["attention_mask"].to(DEVICE),
-            ).logits
-            probs_list.append(torch.softmax(logits, dim=1).cpu().numpy())
-
-    probs        = np.vstack(probs_list)
-    y_score_bert = probs[:, 1]              # P(Fake)
-    y_pred_bert  = np.argmax(probs, axis=1)
-    bert_y_true  = y_true[: len(y_pred_bert)]  # align if lengths differ
-
-    pd.DataFrame({
-        "true_label": bert_y_true,
-        "prob_real":  probs[:, 0],
-        "prob_fake":  y_score_bert,
-    }).to_csv(BERT_PROB_CACHE, index=False)
-    print(f"  Cached → {BERT_PROB_CACHE}")
+print("\nLoading BERT predictions …")
+bert_cache   = pd.read_csv(f"{RESULTS_DIR}/bert_predictions.csv")
+bert_y_true  = bert_cache["true_label"].values
+y_pred_bert  = bert_cache["predicted"].values
+y_score_bert = y_pred_bert.astype(float)  # no probabilities, use hard predictions
 
 acc_b        = accuracy_score(bert_y_true, y_pred_bert)
 p_b, r_b, f1_b, _ = precision_recall_fscore_support(
