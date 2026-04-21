@@ -1,6 +1,9 @@
 # IDE
 .idea/
 
+# macOS
+.DS_Store
+
 # Data (large files)
 data/True.csv
 data/Fake.csv
@@ -10,3 +13,6 @@ __pycache__/
 *.pyc
 *.pyo
 .env
+
+# Large model files (exceed GitHub's 100 MB limit)
+models/bert-fake-news/
