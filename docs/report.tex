@@ -1,7 +1,5 @@
 \documentclass{article}
 
-\usepackage[final]{neurips_2026}
-
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
@@ -17,19 +15,19 @@
 
 \author{%
   Aidan Brinkley \\
-  Department of Computer Science\\
+  Department of Computer Science and Software Engineering\\
   Auburn University\\
   Auburn, AL 36832 \\
-  \texttt{apb0074@auburn.edu} \\
+  \texttt{apb0074@auburn.edu} \\\\
   \And
   Ethan Sax \\
-  Department of Computer Science\\
+  Department of Computer Science and Software Engineering\\
   Auburn University\\
   Auburn, AL 36832 \\
-  \texttt{ems0157@auburn.edu} \\
+  \texttt{ems0157@auburn.edu} \\\\
   \And
   Vincent Cameron \\
-  Department of Computer Science\\
+  Department of Computer Science and Software Engineering\\
   Auburn University\\
   Auburn, AL 36832 \\
   \texttt{vjc0009@auburn.edu} \\
@@ -96,10 +94,29 @@ A unified preprocessing pipeline is applied to all classical models (Logistic Re
 \subsection{BERT}
 
 \section{Results}
-% TODO: Vincent
+All models displayed excellent metrics and accuracy above 99\%. BERT had the highest accuracy with only 7 total misclassifications, clearly outperforming all other models (Figure 1). 
 
+The AUC-ROC curves (Figure 2) show all four models having near-perfect classification performance on the test set, with AUC scores ranging from 0.9996 (logistic regression) to 1.0000 (BERT). The ROC curves for every model hug the top-left corner of the plot, indicating very high true positive rates at very low false positive rates across all decision thresholds.
+
+With BERT achieving a perfect AUC score of 1.0000, it marginally outperforms traditional machine learning models. However, the differences between the traditional models are minute: SVM (0.9997) and Random Forest (0.9998) trail BERT by only 0.0002-0.0003 points, and Logistic Regression (0.9996) yields comparable performance despite being the simplest model. 
+
+This marginal gain came at significantly greater computational cost, with BERT requiring GPU-accelerated training over multiple epochs compared to near-instantaneous fitting of the Scikit-learn models. Also, the uniformly high performance across these models likely reflects strong separability within the dataset.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{confusion_matrices.png}
+    \caption{Confusion Matrices for Logistic Regression, SVM, Random Forest, and BERT}
+    \label{fig:1}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{roc_curves.png}
+    \caption{AUC-ROC Curves for Logistic Regression, SVM, Random Forest, and BERT}
+    \label{fig:2}
+\end{figure}
 \section{Conclusion}
-% TODO: Vincent
+These results are consistent with the findings in the fake news detection literature regarding the ISOT dataset, in which the stylistic and structural differences between real and fake articles are clear enough that even relatively simple TF-IDF based classifiers can achieve very high accuracy. The almost identical performance across all models suggests that the dataset itself could have strong separability, meaning the classification task does not strongly differentiate the representational power of BERT from that of traditional approaches.
+
+Although BERT's perfect AUC is the most eye-catching result, the more meaningful takeaway is the computational cost tradeoff. BERT required significantly more training time and hardware resources than the Scikit-learn models, yet yielded only marginal gains in classification performance on this particular dataset. This suggests that for well-structured fake news classification tasks with clearly separable classes, simpler models may offer a more practical balance between cost and performance.
 
 \section*{References}
 
