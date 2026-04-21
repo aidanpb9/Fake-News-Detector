@@ -5,10 +5,12 @@ import time
 import numpy as np
 import pandas as pd
 import torch
+import matplotlib.pyplot as plt
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
     precision_recall_fscore_support,
+    ConfusionMatrixDisplay,
 )
 from torch.optim import AdamW
 from torch.utils.data import DataLoader, Dataset
@@ -170,3 +172,11 @@ results = pd.DataFrame([{
 }])
 results.to_csv("data/bert_results.csv", index=False)
 print("Results saved → data/bert_results.csv")
+
+# ── Confusion Matrix ───────────────────────────────────────────────────────────
+os.makedirs("results", exist_ok=True)
+ConfusionMatrixDisplay.from_predictions(labels, preds, display_labels=["Real", "Fake"])
+plt.title("BERT")
+plt.savefig("results/bert_confusion_matrix.png")
+plt.show()
+print("Confusion matrix saved → results/bert_confusion_matrix.png")

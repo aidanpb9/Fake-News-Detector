@@ -265,10 +265,10 @@ pd.DataFrame({
     'label': y_test,
     'prediction': tuned_test_preds
 }).to_csv(
-    'data/rf_tuned_predictions.csv',
+    'results/rf_tuned_predictions.csv',
     index=False
 )
-print("Predictions saved to data/rf_tuned_predictions.csv")
+print("Predictions saved to results/rf_tuned_predictions.csv")
 
 #GLobal Feature Importance (overall predictive strength)
 #Add description later

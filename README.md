@@ -3,9 +3,6 @@ Ethan Sax
 Vincent Cameron
 
 # Tasks
-**Vincent** — Fine-tune bert-base-uncased (pre-trained, decided)
-- HuggingFace tokenizer → training loop → save model + predictions
-- Uses its own tokenizer, not TF-IDF
 
 ## Evaluation — Low Effort
 **Vincent** 
