@@ -87,12 +87,123 @@ A unified preprocessing pipeline is applied to all classical models (Logistic Re
 % TODO: Ethan — describe all 4 models
 
 \subsection{Logistic Regression}
+Logistic Regression is a linear classification technique that estimates the probability of a binary outcome using a logistic function. Generally, a Logistic Regression model provides a relation between features and the probability that a particular observation belongs to a particular class. For this project, the model classifies news articles as real or fake. Logistic Regression is a highly effective modeling structure, especially for high-dimensional, sparse data. It’s training speed and production of interpretable feature weights made it a strong baseline technique.
+
+As described in \textbf{Preprocessing}, the Logistic Regression model relies on TF-IDF feature extraction to represent each article. This is the model input. During training, the model learns a linear decision boundary over these preprocessed features. As classifications are defined, weights are attributed to each word/n-gram which act as a gauge of predictive strength as to whether an article is real or fake. Larger negative weights indicate words or n-grams associated with real articles (0) while larger positive weights reveal words or n-grams the model believes to be predictive of fake articles (1).
+
+Model training was carried out on the training data. For optimization, the default {\it lbfgs} (Limited-memory Broyden-Fletcher-Goldfarb-Shanno) algorithm was employed within Sci-Kit Learn's {\it LogisticRegression} function. Model hyperparameters were tuned still using the training data, as well as Sci-Kit Learn’s {\it GridSearchCV}. The parameters tuned:
+\begin{itemize}
+    \item \textbf{max\_iter}: Maximum number of iterations taken for the solvers to converge.
+
+    \item \textbf{C}: Inverse of regularization strength, controlling the bias-variance tradeoff.
+    
+\end{itemize}
+
+Specifically, a 4x3 grid was generated to evaluate different combinations of C-values (0.01, 0.1, 1, 10) and maximum iteration cutoffs (100, 200, 500). 5-Fold Cross-Validation was employed. The optimal set of parameters found were:
+
+\begin{itemize}
+    \item \textbf{max\_iter} = 100
+
+    \item \textbf{C} = 10
+    
+\end{itemize}
+
+Smaller values of C correspond to stronger regularization and simpler model structures. The model selection of C = 10 revealed increased model complexity was necessary and many of the features carried meaningful predictive evidence. Max\_iter = 100 versus 200 and 500 is a strong indication of efficient model convergence. Extra iterations were not required to improve model performance on the training data. 
+
+The model was assessed on separate validation and test sets to confirm smooth generalization. Model performance was evaluated using:
+
+\begin{itemize}
+    \item \textbf{Accuracy}: Percentage of correct classifications.
+
+    \item \textbf{Precision}: Percentage of predicted fake articles correctly classified as fake.
+
+    \item \textbf{Recall}: Percentage of actual fake articles correctly classified as fake.
+
+    \item \textbf{F1 Score}: Harmonic mean of precision and recall.
+\end{itemize}
 
 \subsection{Support Vector Machine}
+Support Vector Machines are supervised learning models that are similar in structure to Logistic Regression models. They also perform classification tasks by defining a decision boundary. The boundary is optimized via maximization of margin between classes. For this project, linear SVM is used to classify articles as real or fake. The boundary can be characterized as a hyperplane which separates the feature space into two defined regions corresponding to real articles and fake articles. Like Logistic Regression, SVM is a classic modeling structure for high dimensional data. The maximal margin condition lends the model to increased levels of robustness, which is well-suited for sparse data and offers a slightly alternative approach compared to Logistic Regression. 
+
+As described in \textbf{Preprocessing}, the SVM model relies on TF-IDF feature extraction to represent each article. Each vector dimension represents a word or n-gram. This is the model input. During training, the model learns a linear decision boundary over these preprocessed features. As classifications are defined, weights are attributed to each word/n-gram. These weights measure the predictive influence of each word/n-gram on the classification decision. Larger negative weights indicate words or n-grams associated with real articles (0) while larger positive weights reveal words or n-grams the model believes to be predictive of fake articles (1).
+
+Model training and hyperparameter tuning was done using the training data. Sci-Kit Learn's {\it LinearSVC} function was used for fitting instead of Sci-Kit Learn's {\it SVC(kernal = ‘linear’)} because it is more effective on large datasets. Hyperparameters were tuned using Sci-Kit Learn’s {\it GridSearchCV}. The same hyperparameters that were tuned the Logistic Regression model were also tuned for the SVM model. Again, a 4x3 grid was generated to train the model on different combinations of C-values and maximum iterations thresholds. The C-values tested were same as the Logistic Regression model. The maximum iteration values tested were adjusted to 500, 1000, and 2000. 5-Fold Cross-Validation was employed. The optimal set of parameters found were:
+
+\begin{itemize}
+    \item \textbf{max\_iter} = 500
+
+    \item \textbf{C} = 10
+    
+\end{itemize}
+
+The evaluation of these hyperparameters is identical to that of the Logistic Regression parameters. The largest C value (10) indicates a necessity for a complex model that captures complex relationships. Many of the features carried predictive significance. The lowest maximum iterations threshold (500) reveals efficiency in model convergence. Additional iterations did not produce improvement in model fitting. 
+
+The model was assessed on separate validation and test sets to confirm smooth generalization. Model performance was evaluated using the same metrics used for the Logistic Regression model. 
 
 \subsection{Random Forest}
+Random Forest is a machine learning mechanism that excels in capturing nonlinear relationships where learning is achieved through generation of an ensemble of decision trees. For this project, Random Forest is used to classify news articles as real or fake. The learning process begins by training each individual tree on a subset of the training data that is randomly sampled with replacement. This random sampling process from the training data is better known as bootstrap sampling. At each tree split, a random subset of features is considered. Because not all features are considered, the process significantly reduces between-tree correlation. In our case, these features are the TF-IDF extractions that represent each article. Overall classification is achieved by considering the predictions of each individual tree. Majority vote decides whether an article is real or fake. In comparison to Logistic Regression and SVM, Random Forest is more nuanced. The averaging process it employs makes it highly robust, reducing variance and improving generalization. Random Forest is the most complex baseline model in the project. 
+
+As described in \textbf{Preprocessing}, the Random Forest model relies on TF-IDF feature extraction to represent each article. Each vector dimension represents a word or n-gram. This is the model input. Since Random Forest has the ability to capture nonlinearities in the data, it is able to not only find words that are indicative of real/fake articles, but it can also capture phrases and word patterns that achieve the same goal. This greatly increases the range of decision rules at it’s disposal for training. As decision rules are generated across different trees, frequency of feature use in decision making is tracked to measure influence on final classification. Feature importance was measured both globally and by class. Global feature importance scores were computed using Sci-Kit Learn’s built in impurity-based calculation, which measures the mean accumulation of impurity decrease across all trees—effectively, how frequently and effectively each feature is used in decision splits that produce correct classifications. Class-based feature analysis was measured using this same calculation, but by comparison of the average TF-IDF values of each feature for real articles and fake articles separately. A positive difference score between these two averages indicated words/n-grams most associated in prediction of real articles. A negative difference score was indication of words/n-grams more closely associated in prediction of fake ones. 
+
+Model training was carried out on the training data. A baseline model was developed first with default parameter settings, establishing a performance benchmark. Model hyperparameters were tuned still using the training data, as well as Sci-Kit Learn’s {\it GridSearchCV}. The parameters tuned:
+
+\begin{itemize}
+    \item \textbf{n\_estimators}: number of trees in the forest. Grid Values were (100, 200, 300).
+
+    \item \textbf{max\_depth}: maximum depth of the tree. Grid Values were (None, 20, 40).
+
+    \item \textbf{min\_samples\_split}: The minimum number of samples required to split an internal node. Grid Values were (2, 5, 10).
+
+    \item \textbf{max\_features}: The number of features to consider when looking for the best split. Input is a function of the total number of feature values. Grid Values were (sqrt, log2).
+    
+\end{itemize}
+
+54 total parameter combinations were considered. Stratified 3-Fold Cross-Validation was utilized. The optimal set of parameters found were: 
+
+\begin{itemize}
+
+\item \textbf{n\_estimators} = 300
+
+    \item \textbf{max\_depth} = None
+
+    \item \textbf{min\_samples\_split} = 10
+
+    \item \textbf{max\_features}: square root
+
+\end{itemize}
+
+The model preferred more trees which increases model stability from a reduction in variance. Since the dataset is so large, more trees allows for larger coverage of patterns. Trees were allowed to grow without bound, incentivizing more complex decision making, capturing more non-linear relationships. At node level, strong regularization was required. This is a direct reaction to counteract potential overfitting from a large number of trees that can become increasingly deep. 
+
+The model was assessed on separate validation and test sets to confirm smooth generalization. Model performance was evaluated using the same metrics used for the Logistic Regression and SVM Model.
 
 \subsection{BERT}
+Bert is a deep learning model. Unlike the 3 classic models described above, it does not treat text as a bag of words. Instead, it processes the entire sequence of words simultaneously and learns relationships between them using self-attention mechanisms. Bert is pre-trained. For this project, the pre-trained Bert model is tuned to classify news articles as real or fake. 
+
+Rather than using TF-IDF feature extraction, Bert takes raw text as the input. Then, the text is converted into token embeddings using the pre-trained tokenizer. Every word is represented with context, which means it’s representation involves all surrounding words. From here, the contextual representation is passed through a classification layer for prediction. Due to it’s complex learning style, there is no feature importance for Bert. 
+
+Model training was done on the training data. Text is converted into input token IDs, attention masks, and labels. Then, it is fed into the model using mini-batches. The model is fine-tuned using backpropagation. Hyperparameters were not tuned via {\it GridSearch} due to computational cost. Hyperparameters were chosen and configured as follows:
+
+\begin{itemize}
+
+    \item \textbf{Max Sequence Length} = 256
+
+    \item \textbf{Batch Size} = 16
+
+    \item \textbf{Learning Rate} = 0.0002
+
+    \item \textbf{Number of Epochs} = 3
+
+    \item \textbf{Model Type}: bert-base-uncased
+
+    \item \textbf{Optimizer}: AdamW with Weight Decay
+
+    \item \textbf{Scheduler}: Linear Decay with Warm Up
+
+\end{itemize}
+
+These parameters control convergence, training stability, and the model’s overall ability to capture long-range dependencies in the text. Max sequence length limits each article to 256 tokens. If an article is longer, it is truncated. If it is shorter, it is padded. 256 was chosen for balance of coverage and speed. Batch size represents the number of samples processed per update. Larger batches are more stable but cost more memory. Smaller batch sizes reduce memory but at the cost of noise introduction. Learning rate controls how much the weights change at each update. If it is too large, the training can be unstable and if it is too small, learning can be painstakingly slow. 0.002 falls somewhere in the middle. The model was allowed to see the entire dataset 3 times in total. No more, for risk of overfitting. The bert-base-uncased model is a pre-trained transformer model with 12 layers and over 100 million parameters. The “uncased” distinction means it considers all text to be lowercase. The model updated weights using gradients. AdamW is just a variant of Adam that employs weight decay. Finally, the scheduler adjusts the model’s learning rate over time. During the first 10\% of steps, the learning rate gradually increases. After that, it gradually decreases. The warmup is critical because early updates tend to lack stability. The warmup and decay make for a smoother training process. 
+
+The model was assessed on separate validation and test sets to confirm smooth generalization. Model performance was evaluated using the same metrics as the 3 previous classical models. 
 
 \section{Results}
 All models displayed excellent metrics and accuracy above 99\%. BERT had the highest accuracy with only 7 total misclassifications, clearly outperforming all other models (Figure 1). 
