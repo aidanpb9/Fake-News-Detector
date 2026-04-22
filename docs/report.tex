@@ -10,6 +10,7 @@
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{float}
 
 \title{Fake News Detection: Comparing Classical ML Models Against BERT}
 
@@ -98,16 +99,16 @@ All models displayed excellent metrics and accuracy above 99\%. BERT had the hig
 
 The AUC-ROC curves (Figure 2) show all four models having near-perfect classification performance on the test set, with AUC scores ranging from 0.9996 (logistic regression) to 1.0000 (BERT). The ROC curves for every model hug the top-left corner of the plot, indicating very high true positive rates at very low false positive rates across all decision thresholds.
 
-With BERT achieving a perfect AUC score of 1.0000, it marginally outperforms traditional machine learning models. However, the differences between the traditional models are minute: SVM (0.9997) and Random Forest (0.9998) trail BERT by only 0.0002-0.0003 points, and Logistic Regression (0.9996) yields comparable performance despite being the simplest model. 
+With BERT achieving a perfect AUC score of 1.0000, it marginally outperforms traditional machine learning models. However, the differences between the traditional models are minimal: SVM (0.9997) and Random Forest (0.9998) trail BERT by only 0.0002-0.0003 points, and Logistic Regression (0.9996) yields comparable performance despite being the simplest model. 
 
 This marginal gain came at significantly greater computational cost, with BERT requiring GPU-accelerated training over multiple epochs compared to near-instantaneous fitting of the Scikit-learn models. Also, the uniformly high performance across these models likely reflects strong separability within the dataset.
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{confusion_matrices.png}
     \caption{Confusion Matrices for Logistic Regression, SVM, Random Forest, and BERT}
     \label{fig:1}
 \end{figure}
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{roc_curves.png}
     \caption{AUC-ROC Curves for Logistic Regression, SVM, Random Forest, and BERT}
