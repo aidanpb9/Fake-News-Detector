@@ -1,6 +1,16 @@
 """Logistic Regression model for Fake News Detector.
+Logistic Regression is a linear classification technique that estimates the probability of a binary outcome using a
+logistic function. For this project, the model classifies news articles as real or fake.
+
 Load preprocessed data and TF-IDF vectorizer.
-Train LR with GridSearchCV hyperparameter tuning and save predictions."""
+Train LR with GridSearchCV hyperparameter tuning and save predictions.
+
+INPUT: Article Text converted into numerical feature vectors using TF-IDF vectorizer
+OUTPUT: Binary classification of whether a news article is real (0) or fake (1)
+RELEVANT PARAMETERS:
+max_iter: Maximum number of iterations taken for the solvers to converge.
+C: Inverse of regularization strength, controlling the bias-variance tradeoff.
+"""
 
 import pandas as pd
 import numpy as np

@@ -1,3 +1,25 @@
+"""
+Bert
+Bert is a pre-trained deep learning model. It processes an entire sequence of words simultaneously and
+learns relationships between them using self-attention mechanisms. For this project, the pre-trained Bert model is
+tuned to classify news articles as real or fake.
+
+INPUT: Raw Article Text
+OUTPUT: Binary classification of whether a news article is real (0) or fake (1)
+
+RELEVANT PARAMETERS:
+Max Sequence Length: threshold to number of tokens for each article. If the article has more, it is truncated. If
+It has less, it is padded.
+
+Number of Epochs: number of times the model is allowed to see the full dataset
+Learning Rate: controls how much the weights change at each update
+Batch Size: represents the number of samples processed per update
+
+
+"""
+
+
+
 import json
 import os
 import time

@@ -1,6 +1,18 @@
 """SVM model for Fake News Detector.
+Support Vector Machines are supervised learning models that perform classification tasks by defining a
+decision boundary. The boundary is optimized via maximization of margin between classes. For this project,
+linear SVM is used to classify articles as real or fake.
+
+
 Load preprocessed data and TF-IDF vectorizer.
-Train SVM with GridSearchCV hyperparameter tuning and save predictions."""
+Train SVM with GridSearchCV hyperparameter tuning and save predictions.
+
+INPUT: Article Text converted into numerical feature vectors using TF-IDF vectorizer
+OUTPUT: Binary classification of whether a news article is real (0) or fake (1)
+RELEVANT PARAMETERS:
+max_iter: Maximum number of iterations taken for the solvers to converge.
+C: Inverse of regularization strength, controlling the bias-variance tradeoff.
+"""
 
 import pandas as pd
 import numpy as np

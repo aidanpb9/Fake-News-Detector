@@ -46,7 +46,12 @@ print(f"Vectorized shape (train): {X_train_vec.shape}")
 
 """
 RANDOM FOREST MODEL
-***NOTE: Rubric asks for short description of method, inputs, and outputs***
+Random Forest is a machine learning mechanism that excels in capturing nonlinear relationships where learning is 
+achieved through generation of an ensemble of decision trees. For this project, Random Forest is used to classify news 
+articles as real or fake.
+
+INPUT: Article Text converted into numerical feature vectors using TF-IDF vectorizer
+OUTPUT: Binary classification of whether a news article is real (0) or fake (1) 
 
 RELEVANT PARAMETERS
 n_estimators: number of trees in the forrest
