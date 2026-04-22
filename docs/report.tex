@@ -39,7 +39,11 @@
 \maketitle
 
 \begin{abstract}
-% TODO: Write abstract once results are complete
+Automated fake news detection has become an increasingly critical problem as misinformation spreads rapidly across online platforms.
+This project evaluates and compares four machine learning models for binary fake news classification on the ISOT Fake News Dataset: Logistic Regression, Support Vector Machine (SVM), Random Forest, and BERT.
+The three classical models use a shared TF-IDF preprocessing pipeline, while BERT leverages contextual embeddings via fine-tuning of a pre-trained transformer.
+All models achieved strong test accuracy above 99\%, with BERT performing best at 99.92\% accuracy and an AUC of 1.0000, compared to SVM (99.55\%), Random Forest (99.49\%), and Logistic Regression (99.31\%).
+While BERT marginally outperformed the classical approaches, the performance gap was small, suggesting that the ISOT dataset is sufficiently separable that simpler models are largely sufficient for this task.
 \end{abstract}
 
 \section{Introduction}
